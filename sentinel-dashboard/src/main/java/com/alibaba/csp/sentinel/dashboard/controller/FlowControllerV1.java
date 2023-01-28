@@ -157,6 +157,7 @@ public class FlowControllerV1 {
         try {
             entity = repository.save(entity);
 
+            // 通信
             publishRules(entity.getApp(), entity.getIp(), entity.getPort()).get(5000, TimeUnit.MILLISECONDS);
             return Result.ofSuccess(entity);
         } catch (Throwable t) {
@@ -275,7 +276,9 @@ public class FlowControllerV1 {
     }
 
     private CompletableFuture<Void> publishRules(String app, String ip, Integer port) {
+        // 从内存中读取规则
         List<FlowRuleEntity> rules = repository.findAllByMachine(MachineInfo.of(app, ip, port));
+        // 异步发送到客户端
         return sentinelApiClient.setFlowRuleOfMachineAsync(app, ip, port, rules);
     }
 }

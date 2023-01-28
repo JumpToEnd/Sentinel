@@ -433,6 +433,7 @@ public class SentinelApiClient {
             Map<String, String> params = new HashMap<>(2);
             params.put("type", type);
             params.put("data", data);
+            // CommandCenter
             return executeCommand(app, ip, port, SET_RULES_PATH, params, true)
                 .thenCompose(r -> {
                     if ("success".equalsIgnoreCase(r.trim())) {
